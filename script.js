@@ -4,55 +4,83 @@ function computerPlay() {
     return RBS[Math.floor(Math.random() * 3)];
 }
 
-function playerSection() {
-  return prompt("Choose your weapon to fight against the AI: Rock, Paper or Scissors");
-}
 function playRound(playerSection, computerSection) {
     if( (playerSection.toLowerCase() == "rock" && computerSection.toLowerCase() == "rock") || 
       (playerSection.toLowerCase() == "paper" && computerSection.toLowerCase() == "paper") ||
       (playerSection.toLowerCase() == "scissors" && computerSection.toLowerCase() == "scissors") ) {
     
-        return "A draw for this round.";
+        return -1;
     } ;
      if( (playerSection.toLowerCase() == "rock" && computerSection.toLowerCase() == "scissors") ||
       (playerSection.toLowerCase() == "scissors" && computerSection.toLowerCase() == "paper") ||
       (playerSection.toLowerCase() == "paper" && computerSection.toLowerCase() == "rock") ) {
       
-          return "You win this round.";
+          return 1;
       };
     if( (playerSection.toLowerCase() == "rock" && computerSection.toLowerCase() == "paper") || 
       (playerSection.toLowerCase() == "paper" && computerSection.toLowerCase() == "scissors") || 
       (playerSection.toLowerCase() == "scissors" && computerSection.toLowerCase() == "rock") ) {
-        return "You lost this round";
+        return 0;
     };
 }
 
-function game() {
-  let playerScore = 0;
-  let computerScore = 0;
-  let humanWon = "You win this round.";
-  let draw = "A draw for this round.";
-  let humanLost = "You lost this round";
-  let RoundResult;
+const rock = document.querySelector('#b1');
+const paper = document.querySelector('#b2');
+const scissors = document.querySelector('#b3');
 
-  for(let i = 0; i < 5; i++) {
-    RoundResult = playRound(playerSection(), computerPlay());
-    console.log("Round " + ( i+1 ));
-    
-    if( humanWon == RoundResult) {
-      console.log(humanWon);
-      playerScore += 1;
-    } else if ( humanLost == RoundResult) {
-      console.log(humanLost);
+let playerSection = '';
+
+rock.addEventListener('click', () => {
+   playerSection = 'Rock';
+});
+
+paper.addEventListener('click', () => {
+  playerSection = 'Paper';
+})
+
+scissors.addEventListener('click', () => {
+  playerSection = 'Scissors';
+})
+
+const buttons = document.querySelectorAll('button');
+
+
+const div = document.createElement('div');
+let computerScore = 0;
+let yourScore = 0;
+const YScoreRecorder = document.createElement('div');
+const CScoreRecorder = document.createElement('div');
+
+
+buttons.forEach(button => {
+  button.addEventListener('click', () => {
+    let computerSection = computerPlay();
+    let result = playRound(playerSection, computerSection);
+    if (result === 1) {
+      yourScore += 1;
+      div.textContent = playerSection + ' beats ' + computerSection + '. Well-Chosen sir.'
+    } else if (result === 0) {
       computerScore += 1;
-    } else if (draw == RoundResult) {
-      console.log(draw);
+      div.textContent = playerSection + ' is beaten by ' + computerSection + '. You Loser.'
+    } else if (result === -1) {
+      div.textContent = 'A draw for this round';
+    };
+    YScoreRecorder.innerText = 'Your score: ' + yourScore;
+    CScoreRecorder.innerText = 'Computer score: ' + computerScore;
+
+    if (yourScore == 5 || computerScore == 5) {
+      if (yourScore > computerScore) alert('you won!')
+      else return alert('you lost!');
     }
-  }
+  });
+});
 
-  if(playerScore > computerScore) return "You finally a winner of this game."
-  else if(playerScore < computerScore) return "You finally got beaten by a computer."
-  else return "Game result: DRAW!!";
-}
 
-console.log(game()); 
+document.body.appendChild(div);
+document.body.appendChild(YScoreRecorder);
+document.body.appendChild(CScoreRecorder);
+
+
+
+
+
